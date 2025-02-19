@@ -58,7 +58,9 @@ def process_data(data, max_len, word2index, tag2index):
     sentence_indices = []
     tag_indices = []
 
-    for sentence in data:
+    #for sentence in data:
+    for item in data:
+        sentence = item['sentence']  #access the sentence within each dictionary
         tokens, tags = sentence_to_indices(sentence, word2index, tag2index)
         sentence_indices.append(tokens)
         tag_indices.append(tags)
