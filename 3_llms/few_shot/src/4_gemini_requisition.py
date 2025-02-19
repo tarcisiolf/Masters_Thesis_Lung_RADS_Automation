@@ -7,7 +7,7 @@ def gemini_req(inputs, prompts):
     results = []
     total_exec_time = 0
 
-    genai.configure(api_key="AIzaSyAD7j0orzqLCVDgiMD9gveRVy9APV2qjFo")
+    genai.configure(api_key="")
 
     for i in range(len(inputs)):     
         input = inputs[i]

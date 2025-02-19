@@ -13,7 +13,7 @@ def gpt_req(inputs, prompts):
         input_results = []
 
         for j in range(3):
-            client = OpenAI(api_key="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")
+            client = OpenAI(api_key="")
 
             start_time = time.time()
 

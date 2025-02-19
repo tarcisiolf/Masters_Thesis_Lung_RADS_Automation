@@ -11,7 +11,7 @@ def gemini_req(inputs, prompt):
         input_results = []
 
         for j in range(3): 
-            genai.configure(api_key="AIzaSyAD7j0orzqLCVDgiMD9gveRVy9APV2qjFo")
+            genai.configure(api_key="")
             model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json", "temperature" : 0})
             start_time = time.time()      
             

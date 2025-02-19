@@ -12,7 +12,7 @@ def llama_req(inputs, prompt):
         input_results = []
 
         for j in range(3):
-            client = Together(api_key="cb5d09b25ce6e19e75392010521e87dc4d15ef6cc5a36e34e2dbe52bf202512e")
+            client = Together(api_key="")
 
             start_time = time.time()
 
