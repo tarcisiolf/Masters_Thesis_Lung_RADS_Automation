@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 import json
 from sklearn.model_selection import train_test_split
+import random
 
 def preprocess_ner_data(csv_file, test_size=0.3, random_state=42):
     df = pd.read_csv(csv_file, encoding='utf-8')
@@ -82,25 +83,19 @@ def load_json(filename):
         return json.load(f)
 
 if __name__ == '__main__':
-    csv_file_path = "df_tokens_labeled_iob.csv"  # Replace with your CSV file path
-    train_data, test_data, unique_tags = preprocess_ner_data(csv_file_path, test_size=0.3)
+    folder_path = "1_bilstmcrf_pytorch/train_test_70_30/data/train_10/"
+    csv_file_path = "1_bilstmcrf_pytorch/train_test_70_30/df_tokens_labeled_iob.csv"  # Replace with your CSV file path
+
+    num = random.randrange(42000)
+    print(num)
+    train_data, test_data, unique_tags = preprocess_ner_data(csv_file_path, test_size=0.3, random_state=num)
     #word2index, index2word, tag2index, index2tag = create_mappings(train_data + test_data, unique_tags)
     word2index, index2word, tag2index, index2tag = create_mappings([item['sentence'] for item in train_data + test_data], unique_tags) # Pass sentences only
 
-    #max_len = max(len(s) for s in train_data + test_data)
-    #train_sentences_tensor, train_tags_tensor = process_data(train_data, max_len, word2index, tag2index)
-    #test_sentences_tensor, test_tags_tensor = process_data(test_data, max_len, word2index, tag2index)
-
-
-    save_json(train_data, "train_data.json")
-    save_json(test_data, "test_data.json")
-    save_json(unique_tags, "unique_tags.json")
-    save_json(word2index, "word2index.json")
-    save_json({str(k): v for k, v in index2word.items()}, "index2word.json")
-    save_json(tag2index, "tag2index.json")
-    save_json({str(k): v for k, v in index2tag.items()}, "index2tag.json")
-
-    #torch.save(train_sentences_tensor, "train_sentences_tensor.pt")
-    #torch.save(train_tags_tensor, "train_tags_tensor.pt")
-    #torch.save(test_sentences_tensor, "test_sentences_tensor.pt")
-    #torch.save(test_tags_tensor, "test_tags_tensor.pt")
+    save_json(train_data, folder_path+"train_data.json")
+    save_json(test_data, folder_path+"test_data.json")
+    save_json(unique_tags, folder_path+"unique_tags.json")
+    save_json(word2index, folder_path+"word2index.json")
+    save_json({str(k): v for k, v in index2word.items()}, folder_path+"index2word.json")
+    save_json(tag2index, folder_path+"tag2index.json")
+    save_json({str(k): v for k, v in index2tag.items()}, folder_path+"index2tag.json")
