@@ -9,6 +9,7 @@ import json
 import logging
 from torch.utils.data import DataLoader, TensorDataset
 import numpy as np
+import time
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -79,7 +80,7 @@ def train(model, train_sentences_tensor, train_tags_tensor, config, word2index):
         avg_epoch_loss = total_loss / len(dataloader)
         logging.info(f"Epoch: {epoch+1}, Average Loss: {avg_epoch_loss:.4f}")
 
-                
+        """    
         # Early stopping check
         if avg_epoch_loss < best_loss:
             best_loss = avg_epoch_loss
@@ -94,6 +95,7 @@ def train(model, train_sentences_tensor, train_tags_tensor, config, word2index):
             break  # Exit training loop
 
     model.load_state_dict(torch.load("best_bilstm_crf.pth")) # Load best model
+    """
     return model
 
 #def predict(model, sentence, word2index, device):
@@ -112,7 +114,7 @@ def evaluate_model(model, test_sentences_tensor, test_tags_tensor, test_data, wo
     test_predicted_tags = []
 
     for i in range(len(test_sentences_tensor)):
-        _, tags = dp.sentence_to_indices(test_data[i], word2index, tag2index) # Correctly retrieve original tags
+        _, tags = dp.sentence_to_indices(test_data[i]["sentence"], word2index, tag2index) # Correctly retrieve original tags
         #predicted_tags = predict(model, test_sentences_tensor[i].unsqueeze(0), word2index, device)
         predicted_tags = predict(model, test_sentences_tensor[i].unsqueeze(0), word2index)
 
@@ -141,64 +143,114 @@ def convert(o):
         return o  # Return as is if it's already a native Python type
     
 if __name__ == "__main__":
-    train_data = dp.load_json("train_data.json")
-    test_data = dp.load_json("test_data.json")
-    unique_tags = dp.load_json("unique_tags.json")
-    word2index = dp.load_json("word2index.json")
-    index2word = {int(k): v for k, v in dp.load_json("index2word.json").items()}
-    tag2index = dp.load_json("tag2index.json")
-    index2tag = {int(k): v for k, v in dp.load_json("index2tag.json").items()}
+
+    folders_path = ['1_bilstmcrf_pytorch/train_test_70_30/data/train_1_4778/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_2_4778/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_3_141/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_4_20271/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_5_9406/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_6_18140/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_7_15121/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_8_37801/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_9_13895/',
+                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_10_31746/']
+    
+    metrics_folders = ['1_bilstmcrf_pytorch/train_test_70_30/metrics/train_1/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_2/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_3/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_4/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_5/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_6/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_7/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_8/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_9/',
+                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_10/']
+    
+    models_folders = ['1_bilstmcrf_pytorch/train_test_70_30/models/train_1/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_2/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_3/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_4/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_5/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_6/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_7/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_8/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_9/',
+                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_10/']
+    
+    j=0
+
+    for folder in folders_path:
+        train_data = dp.load_json(folder+"train_data.json")
+        test_data = dp.load_json(folder+"test_data.json")
+        unique_tags = dp.load_json(folder+"unique_tags.json")
+        word2index = dp.load_json(folder+"word2index.json")
+        index2word = {int(k): v for k, v in dp.load_json(folder+"index2word.json").items()}
+        tag2index = dp.load_json(folder+"tag2index.json")
+        index2tag = {int(k): v for k, v in dp.load_json(folder+"index2tag.json").items()}
 
 
-    # Convert sentences to indices and pad
-    max_len = 512
-    train_sentences_indices, train_tags_indices = dp.process_data(train_data, max_len, word2index, tag2index)
-    test_sentences_indices, test_tags_indices = dp.process_data(test_data, max_len, word2index, tag2index)
+        # Convert sentences to indices and pad
+        max_len = 512
+        train_sentences_indices, train_tags_indices = dp.process_data(train_data, max_len, word2index, tag2index)
+        test_sentences_indices, test_tags_indices = dp.process_data(test_data, max_len, word2index, tag2index)
 
-    vocab_size = len(word2index)
-    num_tags = len(unique_tags)
-    best_f1_score = -1
+        vocab_size = len(word2index)
+        num_tags = len(unique_tags)
+        best_f1_score = -1
 
-    #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    #logging.info(f"Using device: {device}")
+        #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        #logging.info(f"Using device: {device}")
 
-    param_grid = {
-        "batch_size": [4, 8, 16],
-        "embedding_dim": [50, 100, 200],
-        "hidden_dim": [64, 128, 256],
-        "lstm_dropout": [0.1],
-        "learning_rate": [0.01],
-    }
+        param_grid = {
+            "batch_size": [4, 8, 16],
+            "embedding_dim": [50, 100, 200],
+            "hidden_dim": [50, 100, 200],
+            "lstm_dropout": [0.1],
+            "learning_rate": [0.01],
+        }
 
-    best_f1_score = -1
-    for batch_size, embedding_dim, hidden_dim, lstm_dropout, learning_rate in itertools.product(
-        param_grid["batch_size"], param_grid["embedding_dim"], param_grid["hidden_dim"], param_grid["lstm_dropout"], param_grid["learning_rate"]):
+        best_f1_score = -1
 
-        logging.info(f"Training with batch_size={batch_size}, embedding_dim={embedding_dim}, hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}")
-        print("\n")
-        config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=10, batch_size=batch_size, padding_idx=word2index['<PAD>'])
+        for batch_size, embedding_dim, hidden_dim, lstm_dropout, learning_rate in itertools.product(
+            param_grid["batch_size"], param_grid["embedding_dim"], param_grid["hidden_dim"], param_grid["lstm_dropout"], param_grid["learning_rate"]):
 
-        #model = BiLSTM_CRF(config, word2index).to(device)
-        model = BiLSTM_CRF(config, word2index)
+            start = time.time()
+            logging.info(f"Training with batch_size={batch_size}, embedding_dim={embedding_dim}, hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}\n")
 
-        #trained_model = train(model, train_sentences_indices, train_tags_indices, config, word2index, device)
-        trained_model = train(model, train_sentences_indices, train_tags_indices, config, word2index)
-        #test_actual_tags, test_predicted_tags = evaluate_model(trained_model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag, config, device)
-        test_actual_tags, test_predicted_tags = evaluate_model(trained_model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag)
+            config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=3, batch_size=batch_size, padding_idx=word2index['<PAD>'])
+            #model = BiLSTM_CRF(config, word2index).to(device)
+            model = BiLSTM_CRF(config, word2index)
+            #trained_model = train(model, train_sentences_indices, train_tags_indices, config, word2index, device)
+            trained_model = train(model, train_sentences_indices, train_tags_indices, config, word2index)
+            
+            end = time.time()
+            training_time = end - start
 
-        report = classification_report(test_actual_tags, test_predicted_tags, output_dict=True)
-        f1_score = report["macro avg"]["f1-score"]
+            logging.info(f"Training time: {end - start:.4f} seconds\n")
+            #test_actual_tags, test_predicted_tags = evaluate_model(trained_model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag, config, device)
+            test_actual_tags, test_predicted_tags = evaluate_model(trained_model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag)
 
-        logging.info(f"F1-score: {f1_score:.4f}")
+            report = classification_report(test_actual_tags, test_predicted_tags, output_dict=True)
+            report['training_time'] = training_time  # Add training time to the report
 
-        # Save report as a JSON file
-        with open(f"classification_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.json", "w") as f:
-            json.dump(report, f, indent=4, default=convert)
+            f1_score = report["macro avg"]["f1-score"]
+            logging.info(f"F1-score: {f1_score:.4f}\n")
 
-        if f1_score > best_f1_score:
-            best_f1_score = f1_score
-            best_params = {"batch_size": batch_size, "embedding_dim": embedding_dim, "hidden_dim": hidden_dim}
-            #torch.save(trained_model.state_dict(), "best_bilstm_crf.pth")
-        torch.save(trained_model.state_dict(), f"bilstm_crf_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.pth")
+            metric_file_name = metrics_folders[j] + f"classification_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.json"
 
-    logging.info(f"Best Model - batch_size={best_params['batch_size']}, embedding_dim={best_params['embedding_dim']}, hidden_dim={best_params['hidden_dim']}, F1-score={best_f1_score:.4f}")
+            # Save report as a JSON file
+            with open(metric_file_name, "w") as f:
+                json.dump(report, f, indent=4, default=convert)
+
+            model_file_name = models_folders[j] + f"bilstm_crf_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.pth"
+
+            if f1_score > best_f1_score:
+                best_f1_score = f1_score
+                best_params = {"batch_size": batch_size, "embedding_dim": embedding_dim, "hidden_dim": hidden_dim}
+                #torch.save(trained_model.state_dict(), "best_bilstm_crf.pth")
+            torch.save(trained_model.state_dict(), model_file_name)
+
+        j += 1
+        logging.info(f"Best Model - batch_size={best_params['batch_size']}, embedding_dim={best_params['embedding_dim']}, hidden_dim={best_params['hidden_dim']}, F1-score={best_f1_score:.4f}")
+        logging.info(f"Metric_file_name {metric_file_name}\n")
+        logging.info(f"Model_file_name {model_file_name}\n")
