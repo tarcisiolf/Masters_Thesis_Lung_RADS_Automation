@@ -62,10 +62,10 @@ def save_results(results, output_file):
 
 def main():
     # Directory containing the JSON files
-    input_directory = "1_bilstmcrf_pytorch/train_test_70_30/metrics"  # Replace with your directory path
+    input_directory = r"bilstmcrf_pytorch\train_test_70_30\metrics\train_10"  # Replace with your directory path
     
     # Output file path
-    output_file = "1_bilstmcrf_pytorch/train_test_70_30/metrics/macro_f1_scores_70_30.json"
+    output_file = r"bilstmcrf_pytorch\train_test_70_30\metrics\train_10\macro_f1_scores_70_30.json"
     
     # Extract scores
     results = extract_macro_f1_scores(input_directory)
