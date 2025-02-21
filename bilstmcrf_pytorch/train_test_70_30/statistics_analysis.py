@@ -134,7 +134,7 @@ if friedman_p < 0.05:
     plt.figure(figsize=(15, 10))
     sns.heatmap(nemenyi_results < 0.05, cmap='Blues', annot=False)
     plt.title("Significant differences (p < 0.05) between models (Nemenyi)")
-    plt.savefig(r'bilstmcrf_pytorch\train_test_70_30\metrics\nemenyi_results.jpg')
+    #plt.savefig(r'bilstmcrf_pytorch\train_test_70_30\metrics\nemenyi_results.jpg')
     plt.show()
 else:
     print("\nNão há diferenças significativas entre os modelos.")
@@ -152,7 +152,7 @@ sns.boxplot(data=df)
 plt.xticks(rotation=90)
 plt.title("F1-score distribution by Model")
 plt.ylabel("F1-Score")
-plt.savefig(r'bilstmcrf_pytorch\train_test_70_30\metrics\boxplot.jpg')
+#plt.savefig(r'bilstmcrf_pytorch\train_test_70_30\metrics\boxplot.jpg')
 plt.show()
 """
 # Step 1: Descriptive Statistics
