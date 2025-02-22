@@ -44,8 +44,8 @@ def evaluate_consistency(filepath):
         questions = [key for key in line[0].keys() if key != 'Id do laudo']
 
         for question in questions:
-            print(i)
-            print(question)
+            #print(i)
+            #print(question)
             responses = [entry[question] for entry in line]  # Collect responses from all 3 objects
             num_questions += 1
 
@@ -93,8 +93,8 @@ def evaluate_consistency(filepath):
 
 
 # Example usage:
-input_file_name = r"C:\Users\tarcisio.ferreira\Desktop\Eu\mestrado\Lung_RADS_Automation\3_llms\few_shot\data\llama_results\results_prompt_2_five_ex.jsonl"
-output_file_name = r"C:\Users\tarcisio.ferreira\Desktop\Eu\mestrado\Lung_RADS_Automation\3_llms\few_shot\data\llama_results\response_consistency_prompt_2_five_ex.jsonl"
+input_file_name = "llms/zero_shot/data/llama_results/results_prompt_2.jsonl"
+output_file_name = "llms/zero_shot/data/llama_results/response_consistency_prompt_2.jsonl"
 results = evaluate_consistency(input_file_name)
 
 if isinstance(results, dict):
