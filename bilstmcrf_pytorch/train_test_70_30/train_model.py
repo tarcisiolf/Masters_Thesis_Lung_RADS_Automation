@@ -144,39 +144,38 @@ def convert(o):
     
 if __name__ == "__main__":
 
-    folders_path = ['1_bilstmcrf_pytorch/train_test_70_30/data/train_1_4778/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_2_4778/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_3_141/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_4_20271/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_5_9406/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_6_18140/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_7_15121/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_8_37801/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_9_13895/',
-                    '1_bilstmcrf_pytorch/train_test_70_30/data/train_10_31746/']
+    folders_path = ['bilstmcrf_pytorch/train_test_70_30/data/train_1_4778/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_2_4778/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_3_141/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_4_20271/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_5_9406/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_6_18140/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_7_15121/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_8_37801/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_9_13895/',
+                    'bilstmcrf_pytorch/train_test_70_30/data/train_10_31746/']
     
-    metrics_folders = ['1_bilstmcrf_pytorch/train_test_70_30/metrics/train_1/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_2/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_3/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_4/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_5/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_6/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_7/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_8/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_9/',
-                       '1_bilstmcrf_pytorch/train_test_70_30/metrics/train_10/']
+    metrics_folders = ['bilstmcrf_pytorch/train_test_70_30/metrics/train_1/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_2/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_3/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_4/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_5/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_6/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_7/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_8/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_9/',
+                       'bilstmcrf_pytorch/train_test_70_30/metrics/train_10/']
     
-    models_folders = ['1_bilstmcrf_pytorch/train_test_70_30/models/train_1/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_2/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_3/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_4/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_5/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_6/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_7/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_8/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_9/',
-                      '1_bilstmcrf_pytorch/train_test_70_30/models/train_10/']
-    
+    models_folders = ['bilstmcrf_pytorch/train_test_70_30/models/train_1/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_2/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_3/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_4/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_5/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_6/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_7/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_8/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_9/',
+                      'bilstmcrf_pytorch/train_test_70_30/models/train_10/']
     j=0
 
     for folder in folders_path:
@@ -201,6 +200,8 @@ if __name__ == "__main__":
         #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         #logging.info(f"Using device: {device}")
 
+        """
+        
         param_grid = {
             "batch_size": [4, 8, 16],
             "embedding_dim": [50, 100, 200],
@@ -208,7 +209,17 @@ if __name__ == "__main__":
             "lstm_dropout": [0.1],
             "learning_rate": [0.01],
         }
+        """
 
+        param_grid = {
+            "batch_size": [4],
+            "embedding_dim": [50],
+            "hidden_dim": [50],
+            "lstm_dropout": [0.1],
+            "learning_rate": [0.01],
+        }
+
+        epochs = 10
         best_f1_score = -1
 
         for batch_size, embedding_dim, hidden_dim, lstm_dropout, learning_rate in itertools.product(
@@ -217,7 +228,7 @@ if __name__ == "__main__":
             start = time.time()
             logging.info(f"Training with batch_size={batch_size}, embedding_dim={embedding_dim}, hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}\n")
 
-            config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=3, batch_size=batch_size, padding_idx=word2index['<PAD>'])
+            config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=epochs, batch_size=batch_size, padding_idx=word2index['<PAD>'])
             #model = BiLSTM_CRF(config, word2index).to(device)
             model = BiLSTM_CRF(config, word2index)
             #trained_model = train(model, train_sentences_indices, train_tags_indices, config, word2index, device)
@@ -236,13 +247,13 @@ if __name__ == "__main__":
             f1_score = report["macro avg"]["f1-score"]
             logging.info(f"F1-score: {f1_score:.4f}\n")
 
-            metric_file_name = metrics_folders[j] + f"classification_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.json"
+            metric_file_name = metrics_folders[j] + f"best_model_classification_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.json"
 
             # Save report as a JSON file
             with open(metric_file_name, "w") as f:
                 json.dump(report, f, indent=4, default=convert)
 
-            model_file_name = models_folders[j] + f"bilstm_crf_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.pth"
+            model_file_name = models_folders[j] + f"best_model_bilstm_crf_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.pth"
 
             if f1_score > best_f1_score:
                 best_f1_score = f1_score
