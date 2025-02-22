@@ -1,55 +1,55 @@
 {
-  "overall_consistency_percentage": 99.42857142857143,
-  "overall_inconsistency_percentage": 0.5714285714285714,
+  "overall_consistency_percentage": 99.0,
+  "overall_inconsistency_percentage": 1.0,
   "overall_skip_percentage": 0.0,
   "per_question_analysis": {
-    "O nódulo é sólido?": {
-      "consistency_percentage": 100.0,
-      "inconsistency_percentage": 0.0,
-      "skip_percentage": 0.0,
-      "total_occurrences": 100
-    },
-    "O nódulo é em partes moles, semissólido ou subsólido?": {
-      "consistency_percentage": 100.0,
-      "inconsistency_percentage": 0.0,
-      "skip_percentage": 0.0,
-      "total_occurrences": 100
-    },
-    "O nódulo é em vidro fosco?": {
+    "O nódulo é sólido ou em partes moles?": {
       "consistency_percentage": 99.0,
       "inconsistency_percentage": 1.0,
       "skip_percentage": 0.0,
       "total_occurrences": 100
     },
-    "O nódulo é espiculado, irregular ou mal definido?": {
-      "consistency_percentage": 100.0,
-      "inconsistency_percentage": 0.0,
-      "skip_percentage": 0.0,
-      "total_occurrences": 100
-    },
-    "O nódulo é calcificado?": {
+    "O nódulo tem densidade semissólida ou parcialmente sólida?": {
       "consistency_percentage": 98.0,
       "inconsistency_percentage": 2.0,
       "skip_percentage": 0.0,
       "total_occurrences": 100
     },
-    "Localização do nódulo": {
+    "O nódulo é em vidro fosco?": {
       "consistency_percentage": 100.0,
       "inconsistency_percentage": 0.0,
       "skip_percentage": 0.0,
       "total_occurrences": 100
     },
-    "Tamanho do nódulo": {
+    "O nódulo é espiculado, irregular ou mal definido?": {
       "consistency_percentage": 99.0,
       "inconsistency_percentage": 1.0,
+      "skip_percentage": 0.0,
+      "total_occurrences": 100
+    },
+    "O nódulo é calcificado?": {
+      "consistency_percentage": 100.0,
+      "inconsistency_percentage": 0.0,
+      "skip_percentage": 0.0,
+      "total_occurrences": 100
+    },
+    "Localização do nódulo": {
+      "consistency_percentage": 97.0,
+      "inconsistency_percentage": 3.0,
+      "skip_percentage": 0.0,
+      "total_occurrences": 100
+    },
+    "Tamanho do nódulo": {
+      "consistency_percentage": 100.0,
+      "inconsistency_percentage": 0.0,
       "skip_percentage": 0.0,
       "total_occurrences": 100
     }
   },
   "consistency_details_by_laudo": {
     "Unknown": {
-      "O nódulo é sólido?": "Consistent",
-      "O nódulo é em partes moles, semissólido ou subsólido?": "Consistent",
+      "O nódulo é sólido ou em partes moles?": "Consistent",
+      "O nódulo tem densidade semissólida ou parcialmente sólida?": "Consistent",
       "O nódulo é em vidro fosco?": "Consistent",
       "O nódulo é espiculado, irregular ou mal definido?": "Consistent",
       "O nódulo é calcificado?": "Consistent",
