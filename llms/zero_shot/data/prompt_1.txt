@@ -1,8 +1,8 @@
 Por favor extraia informações estruturadas relevantes do laudo acima:
 "Questão" : "Resposta"
 {
-"O nódulo é sólido?" : "",
-"O nódulo é em partes moles, semissólido ou subsólido?" : "",
+"O nódulo é sólido ou em partes moles?" : "",
+"O nódulo tem densidade semissólida ou parcialmente sólida?" : "",
 "O nódulo é em vidro fosco?" : "",
 "O nódulo é espiculado, irregular ou mal definido?" : "",
 "O nódulo é calcificado?" : "",
