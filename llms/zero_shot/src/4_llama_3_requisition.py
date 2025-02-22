@@ -45,15 +45,15 @@ def llama_req(inputs, prompt):
 
 if __name__ == '__main__':
    # Prompt 1
-    inputs = pf.read_input_file("zero_shot/data/inputs.txt")
-    #prompt_1 = pf.read_prompt_file(r"zero_shot/data/prompt_1.txt")
+    inputs = pf.read_input_file("llms/zero_shot/data/inputs.txt")
+    prompt_1 = pf.read_prompt_file("llms/zero_shot/data/prompt_1.txt")
 
-    #inputs = pf.pre_process_input_file(inputs)
+    inputs = pf.pre_process_input_file(inputs)
 
-    #results_1 = llama_req(inputs, prompt_1)
-    #pf.write_output_file(r"zero_shot/data/llama_results/results_prompt_1.txt", results_1)
+    results_1 = llama_req(inputs, prompt_1)
+    pf.write_output_file("llms/zero_shot/data/llama_results/results_prompt_1.txt", results_1)
 
     #Prompt 2
-    #prompt_2 = pf.read_prompt_file("zero_shot/data/prompt_2.txt")
-    #results_2 = llama_req(inputs, prompt_2)
-    #pf.write_output_file("zero_shot/data/llama_results/results_prompt_2.txt", results_2)
+    prompt_2 = pf.read_prompt_file("llms/zero_shot/data/prompt_2.txt")
+    results_2 = llama_req(inputs, prompt_2)
+    pf.write_output_file("llms/zero_shot/data/llama_results/results_prompt_2.txt", results_2)
