@@ -84,3 +84,31 @@ def tags_mapping_v2(tags_series):  # More descriptive argument name
       raise ValueError("The 'O' tag was not found in the data")
 
     return tag2idx, idx2tag, unseen_label, unique_tags
+
+
+def retrieve_token_tag_and_tag_pred(text_tokenized, predictions, dev_label, idx2tag):
+    word_ids = text_tokenized.word_ids()
+    previous_index = None
+
+    retrieved_tags_pred = []
+    retrieved_tags_dev = []
+    i = 0
+    predictions = predictions[0]
+    dev_label = dev_label[0]
+
+    for word_idx in word_ids:
+        if word_idx == None:
+            pass
+        elif word_idx == previous_index:
+            pass
+        else:
+            retrieved_tags_pred.append(idx2tag[predictions[i]])
+            if dev_label[i] == -100 or dev_label[i] == "-100":
+                retrieved_tags_dev.append("O")
+            else:
+                retrieved_tags_dev.append(idx2tag[dev_label[i]])
+
+        i += 1
+        previous_index = word_idx
+
+    return retrieved_tags_dev, retrieved_tags_pred
