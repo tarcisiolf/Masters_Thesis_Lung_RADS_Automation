@@ -9,6 +9,7 @@ import json
 import logging
 from torch.utils.data import DataLoader, TensorDataset
 import numpy as np
+import pandas as pd
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -77,54 +78,86 @@ def convert(o):
     else:
         return o
 
+def create_token_tag_dataframe(test_sentences_indices, test_actual_tags, test_predicted_tags, index2word):
+    """
+    Creates a pandas DataFrame with 'Token', 'Tag', and 'Predicted_Tag' columns.
+
+    Args:
+        test_sentences_indices: List of lists of token indices.
+        test_actual_tags: List of lists of actual tags.
+        test_predicted_tags: List of lists of predicted tags.
+        index2word: Dictionary mapping token indices to words.
+
+    Returns:
+        pandas.DataFrame: DataFrame containing token, actual tag, and predicted tag information.
+    """
+    df = pd.DataFrame(columns=['token', 'iob_tag', 'predicted_iob_tag'])
+    for test_sentence, test_actual_tag, test_predicted_tag in zip(test_sentences_indices, test_actual_tags, test_predicted_tags):
+        test_sentence = test_sentence.tolist()
+        test_sentence = test_sentence[:len(test_actual_tag)]
+        test_sentence = [index2word[index] for index in test_sentence]
+
+        for i in range(len(test_sentence)):
+            data = []
+            token = test_sentence[i]
+            tag = test_actual_tag[i]
+            predicted_tag = test_predicted_tag[i]
+            data.append({'token': token, 'iob_tag': tag, 'predicted_iob_tag': predicted_tag})
+            df = pd.concat([df, pd.DataFrame(data)], ignore_index=True)
+
+    return df
+
 if __name__ == "__main__":
-    train_data = dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/train_data.json")
-    test_data = dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/test_data.json")
-    unique_tags = dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/unique_tags.json")
-    word2index = dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/word2index.json")
-    index2word = {int(k): v for k, v in dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/index2word.json").items()}
-    tag2index = dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/tag2index.json")
-    index2tag = {int(k): v for k, v in dp.load_json("1_bilstmcrf_pytorch/train_test_70_30/data/index2tag.json").items()}
+    test_data = dp.load_json("bilstmcrf_pytorch/lung_rads_data/test_data.json")
+    unique_tags = dp.load_json("bilstmcrf_pytorch/train_test_70_30/data/train_0/unique_tags.json")
+    word2index = dp.load_json("bilstmcrf_pytorch/train_test_70_30/data/train_0/word2index.json")
+    index2word = {int(k): v for k, v in dp.load_json("bilstmcrf_pytorch/train_test_70_30/data/train_0/index2word.json").items()}
+    tag2index = dp.load_json("bilstmcrf_pytorch/train_test_70_30/data/train_0/tag2index.json")
+    index2tag = {int(k): v for k, v in dp.load_json("bilstmcrf_pytorch/train_test_70_30/data/train_0/index2tag.json").items()}
+
+    output_file_name = "bilstmcrf_pytorch/lung_rads_data/lung_rads_test_predicted.csv"
+    test_csv_file_name = "bilstmcrf_pytorch/lung_rads_data/lung_rads_test.csv"
 
     max_len = 512
-    train_sentences_indices, train_tags_indices = dp.process_data(train_data, max_len, word2index, tag2index)
     test_sentences_indices, test_tags_indices = dp.process_data(test_data, max_len, word2index, tag2index)
 
     vocab_size = len(word2index)
     num_tags = len(unique_tags)
     best_f1_score = -1
 
-    param_grid = {
-        "batch_size": [4, 8, 16],
-        "embedding_dim": [50, 100, 200],
-        "hidden_dim": [64, 128, 256],
-        "lstm_dropout": [0.1],
-        "learning_rate": [0.01],
-    }
+    embedding_dim = 50
+    lstm_dropout = 0.1
+    learning_rate = 0.01
+    batch_size = 4
+    hidden_dim = 50
 
-    best_f1_score = -1
-    for batch_size, embedding_dim, hidden_dim, lstm_dropout, learning_rate in itertools.product(
-        param_grid["batch_size"], param_grid["embedding_dim"], param_grid["hidden_dim"], param_grid["lstm_dropout"], param_grid["learning_rate"]):
-        
-        for i in range(10):
-            logging.info(f"Evaluating model with batch_size={batch_size}, embedding_dim={embedding_dim}, hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}")
-            
-            config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=10, batch_size=batch_size, padding_idx=word2index['<PAD>'])
+    logging.info(f"Evaluating model")
+    
+    config = Config(vocab_size, num_tags, embedding_dim, hidden_dim, lstm_dropout, learning_rate, epochs=10, batch_size=batch_size, padding_idx=word2index['<PAD>'])
 
-            model = BiLSTM_CRF(config, word2index)
-            folder_name = "1_bilstmcrf_pytorch/train_test_70_30/models"
-            model_file_name = folder_name+f"/bilstm_crf_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.pth"
+    model = BiLSTM_CRF(config, word2index)
+    model_file_name = "bilstmcrf_pytorch/train_test_70_30/models/train_1/best_model_bilstm_crf_batch_size=4_embedding_dim=50_hidden_dim=50_lstm_dropout=0.1_learning_rate=0.01.pth"
 
-            model.load_state_dict(torch.load(model_file_name))
-            model.eval()
+    model.load_state_dict(torch.load(model_file_name))
+    model.eval()
 
-            test_actual_tags, test_predicted_tags = evaluate_model(model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag)
+    test_actual_tags, test_predicted_tags = evaluate_model(model, test_sentences_indices, test_tags_indices, test_data, word2index, tag2index, index2tag)
+    
+    logging.info(f"Creating dataframe with results")
+    
+    df = create_token_tag_dataframe(test_sentences_indices, test_actual_tags, test_predicted_tags, index2word)
+    test_df = pd.read_csv(test_csv_file_name)
+    report_index_df = test_df.report_index
+    df.insert(0, 'report_idx', report_index_df)
+    df.to_csv(output_file_name, index=False)
+  
+    """
+    report = classification_report(test_actual_tags, test_predicted_tags, output_dict=True)
 
-            report = classification_report(test_actual_tags, test_predicted_tags, output_dict=True)
-            f1_score = report["macro avg"]["f1-score"]
+    f1_score = report["macro avg"]["f1-score"]
+    logging.info(f"F1-score: {f1_score:.4f} ")
 
-            logging.info(f"F1-score: {f1_score:.4f} | Run: {i+1}")
-        
-            output_file_name = f"1_bilstmcrf_pytorch/train_test_70_30/metrics/evaluation_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}_run_{i}.json"
-            with open(output_file_name, "w") as f:
-                json.dump(report, f, indent=4, default=convert)
+    output_file_name = f"bilstmcrf_pytorch/lung_rads_data/evaluation_report_batch_size={batch_size}_embedding_dim={embedding_dim}_hidden_dim={hidden_dim}_lstm_dropout={lstm_dropout}_learning_rate={learning_rate}.json"
+    with open(output_file_name, "w") as f:
+        json.dump(report, f, indent=4, default=convert)
+    """
