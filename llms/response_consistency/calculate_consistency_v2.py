@@ -93,13 +93,13 @@ def evaluate_consistency(filepath):
 
 
 # Example usage:
-input_file_name = "llms/zero_shot/data/llama_results/results_prompt_2.jsonl"
-output_file_name = "llms/zero_shot/data/llama_results/response_consistency_prompt_2.jsonl"
+input_file_name = "llms/zero_shot/data/gemini_results/results_prompt_1.jsonl"
+output_file_name = "llms/zero_shot/data/gemini_results/response_consistency_prompt_1.jsonl"
 results = evaluate_consistency(input_file_name)
 
-if isinstance(results, dict):
-    print(json.dumps(results, indent=4, ensure_ascii=False))  # Print results in formatted JSON
-elif isinstance(results, str):  # Handle errors
-    print(results)
+#if isinstance(results, dict):
+#    print(json.dumps(results, indent=4, ensure_ascii=False))  # Print results in formatted JSON
+#elif isinstance(results, str):  # Handle errors
+#    print(results)
 
-json.dump(results, open(output_file_name, encoding='utf-8', mode='w'), ensure_ascii=False, sort_keys=False, indent = 2)
+#json.dump(results, open(output_file_name, encoding='utf-8', mode='w'), ensure_ascii=False, sort_keys=False, indent = 2)

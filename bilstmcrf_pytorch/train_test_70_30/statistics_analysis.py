@@ -112,7 +112,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Carregar os dados
-df = pd.read_csv(r'bilstmcrf_pytorch\train_test_70_30\metrics\metrics_27_models.csv', index_col=0)
+df = pd.read_csv('bilstmcrf_pytorch/train_test_70_30/metrics/metrics_27_models.csv', index_col=0)
 df.columns = [f'model_{i+1}' for i in range(27)]  # Renomear colunas para model_0 a model_26
 
 # Preparar dados em formato longo
@@ -129,7 +129,6 @@ if friedman_p < 0.05:
     print("\nHá diferenças significativas entre os modelos. Aplicando post-hoc Nemenyi...")
     # Post-hoc Nemenyi
     nemenyi_results = posthoc_nemenyi_friedman(df)
-    print(nemenyi_results)
     # Visualizar matriz de p-values
     plt.figure(figsize=(15, 10))
     sns.heatmap(nemenyi_results < 0.05, cmap='Blues', annot=False)
@@ -145,7 +144,6 @@ std_f1 = df.std()
 
 print("\nMédias de F1 por modelo (ordenadas):")
 print(mean_f1.to_string(float_format='%.4f'))
-
 # Gráfico de caixa
 plt.figure(figsize=(12, 6))
 sns.boxplot(data=df)
