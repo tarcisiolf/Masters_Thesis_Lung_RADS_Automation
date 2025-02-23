@@ -82,7 +82,27 @@ def load_json(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return json.load(f)
 
+
+def preprocess_test_data_lung_rads(csv_file):
+    df = pd.read_csv(csv_file, encoding='utf-8')
+    grouped = df.groupby('report_index')
+    sentences = []
+    #for _, group in grouped:
+    for report_index, group in grouped:
+        sentence = list(zip(group['token'], group['iob_tag']))
+        #sentences.append(sentence)
+        sentences.append({"report_index": report_index, "sentence": sentence})  # Include report_index
+
+    return sentences
+
 if __name__ == '__main__':
+    folder_path = "bilstmcrf_pytorch/lung_rads_data/"
+    csv_file_path = "bilstmcrf_pytorch/lung_rads_data/lung_rads_test.csv"  # Replace with your CSV file path
+    
+    test_data = preprocess_test_data_lung_rads(csv_file_path)
+    save_json(test_data, folder_path+"test_data.json")
+
+    """
     folder_path = "1_bilstmcrf_pytorch/train_test_70_30/data/train_10/"
     csv_file_path = "1_bilstmcrf_pytorch/train_test_70_30/df_tokens_labeled_iob.csv"  # Replace with your CSV file path
 
@@ -99,3 +119,4 @@ if __name__ == '__main__':
     save_json({str(k): v for k, v in index2word.items()}, folder_path+"index2word.json")
     save_json(tag2index, folder_path+"tag2index.json")
     save_json({str(k): v for k, v in index2tag.items()}, folder_path+"index2tag.json")
+    """
