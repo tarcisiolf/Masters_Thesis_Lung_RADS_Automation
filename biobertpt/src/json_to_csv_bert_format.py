@@ -38,6 +38,8 @@ def process_reports(json_file_path, csv_file_path):
     df.to_csv(csv_file_path, index=False)
 
 # Example usage
-input_file_name = "/home/tarcisiolf/Documents/Mestrado/Lung_RADS_Automation/1_bilstmcrf_pytorch/train_test_70_30/data/train_0/train_data.json"
-output_file_name = "/home/tarcisiolf/Documents/Mestrado/biobertpt_modulirize/data/split_0/df_train_tokens_labeled_iob_bert_format.csv"
+#input_file_name = "/home/tarcisiolf/Documents/Mestrado/Lung_RADS_Automation/1_bilstmcrf_pytorch/train_test_70_30/data/train_0/train_data.json"
+#output_file_name = "/home/tarcisiolf/Documents/Mestrado/biobertpt_modulirize/data/split_0/df_train_tokens_labeled_iob_bert_format.csv"
+input_file_name = "bilstmcrf_pytorch/lung_rads_data/test_data.json"
+output_file_name = "biobertpt/lung_rads/df_test_tokens_labeled_iob_bert_format.csv"
 process_reports(input_file_name, output_file_name)
