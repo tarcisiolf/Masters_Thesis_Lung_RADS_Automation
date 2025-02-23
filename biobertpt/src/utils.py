@@ -112,3 +112,24 @@ def retrieve_token_tag_and_tag_pred(text_tokenized, predictions, dev_label, idx2
         previous_index = word_idx
 
     return retrieved_tags_dev, retrieved_tags_pred
+
+
+def create_dataframe_with_predictions(input_csv_file_name, output_file_name, dev_df, labels_dev, labels_pred):
+
+    df = pd.DataFrame(columns=['token', 'iob_tag', 'predicted_iob_tag'])
+    j=0
+    for list_labels_dev, list_labels_pred in zip(labels_dev, labels_pred):
+        list_tokens = dev_df.sentence.iloc[j].split(' ')
+        for i in range(len(list_labels_dev)):
+            data = []
+            token = list_tokens[i]
+            tag = list_labels_dev[i]
+            predicted_tag = list_labels_pred[i]
+            data.append({'token': token, 'iob_tag': tag, 'predicted_iob_tag': predicted_tag})
+            df = pd.concat([df, pd.DataFrame(data)], ignore_index=True)
+        j += 1
+
+    test_df = pd.read_csv(input_csv_file_name)
+    report_index_df = test_df.report_index
+    df.insert(0, 'report_idx', report_index_df)
+    df.to_csv(output_file_name, index=False)
